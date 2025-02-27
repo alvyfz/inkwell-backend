@@ -1,18 +1,16 @@
-const sdk = require("node-appwrite");
-const dotenv = require('dotenv')
+import * as sdk from 'node-appwrite'
+import * as dotenv from 'dotenv'
 dotenv.config()
 
-const client = new sdk.Client();
+const client = new sdk.Client()
 
 client
-    .setEndpoint(process.env.APPWRITE_ENDPOINT)
-    .setProject(process.env.APPWRITE_PROJECT)
-    .setKey(process.env.APPWRITE_KEY);
-
-const users = new sdk.Users(client)
+  .setEndpoint(process.env.APPWRITE_ENDPOINT as string)
+  .setProject(process.env.APPWRITE_PROJECT as string)
+  .setKey(process.env.APPWRITE_KEY as string)
 
 const ID = sdk.ID
 
-const account = new sdk.Account(client);
+const account = new sdk.Account(client)
 
-export {client,users,ID,account}
+export { client, ID, account }

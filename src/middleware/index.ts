@@ -1,4 +1,3 @@
-// import { app } from '../config/firebaseConfig'
 import AuthenticationError from '../commons/exceptions/AuthenticationError'
 import { Request, Response, NextFunction } from 'express'
 import { auth } from 'firebase-admin'
@@ -15,7 +14,7 @@ export const authMiddleware = async (
       throw new AuthenticationError('Unauthorized: No token provided')
     }
 
-    const decodedToken = await auth( ).verifyIdToken(idToken)
+    const decodedToken = await auth().verifyIdToken(idToken)
 
     if (!decodedToken) {
       throw new AuthenticationError('Unauthorized: Invalid token')

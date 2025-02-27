@@ -20,11 +20,10 @@ export const resErrorHandler = (res: any, error: any) => {
   }
 
   if (error.response) {
-     const response = {
+    const response = {
       isSuccess: false,
       message: error.response.message,
-      error: error.response.type,
-       code: error.response.code
+      error: error.response.code
     }
     return res.status(error.response.code || 500).json(response)
   }
@@ -35,7 +34,7 @@ export const resErrorHandler = (res: any, error: any) => {
   const response = {
     isSuccess: false,
     message: 'Sorry, something went wrong on the server',
-    dev: error
+    dev: error.message
   }
   return res.status(500).json(response)
 }

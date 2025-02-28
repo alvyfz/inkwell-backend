@@ -29,7 +29,6 @@ app.use('/users', usersRouter)
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 app.use(function (error: any, req: Request, res: Response, next: NextFunction) {
-  console.log(error, 'ini error')
   return resErrorHandler(res, error)
 })
 

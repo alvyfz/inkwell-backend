@@ -7,12 +7,17 @@ import jwt from 'jsonwebtoken'
 import { resSuccessHandler } from '@/commons/exceptions/resHandler'
 
 import * as dotenv from 'dotenv'
+import { isEmpty } from 'lodash'
+import { isValidEmail, isValidPassword } from '@/commons/utils/util'
 
 dotenv.config()
 
 export const loginController = async (req: Request, res: Response, next: NextFunction) => {
   const reqBody: { email: string; password: string } = req.body
   try {
+    if (isEmpty(reqBody.email) || isEmpty(reqBody.password)) {
+      throw new ClientError('email or password cannot empty.', 400)
+    }
     // check if user already exist
     const userExist = await getUserByEmail(reqBody.email)
 
@@ -66,6 +71,13 @@ export const signupController = async (req: Request, res: Response, next: NextFu
   const { email, name, password }: { email: string; password: string; name: string } = req.body
 
   try {
+    if (
+      (isEmpty(email) && !isValidEmail(email)) ||
+      (isEmpty(password) && !isValidPassword(password)) ||
+      isEmpty(name)
+    ) {
+      throw new ClientError('name, email or password is invalid', 400)
+    }
     // check if user already exist
     const userExist = await getUserByEmail(email)
 

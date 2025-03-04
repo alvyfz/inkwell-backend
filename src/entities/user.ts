@@ -11,8 +11,3 @@ export interface User {
   createdAt?: Date
   updatedAt?: Date
 }
-
-export enum EMAIL_TYPE {
-  FORGOT_PASSWORD = 'forgotPassword',
-  VERIFY_EMAIL = 'verifyEmail'
-}

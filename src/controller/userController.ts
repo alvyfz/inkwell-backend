@@ -1,14 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
-import { createUser, getUserByEmail, sendEmail } from '@/repository/userCollection'
+import {
+  createUser,
+  getUserByEmail,
+  getUserDetail,
+  getVerifyEmail
+} from '@/repository/userCollection'
 import ClientError from '@/commons/exceptions/ClientError'
-import { EMAIL_TYPE } from '@/entities/user'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { resSuccessHandler } from '@/commons/exceptions/resHandler'
-
 import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
 import { isValidEmail, isValidPassword } from '@/commons/utils/util'
+import { sendOtpEmail } from '@/controller/emailController'
 
 dotenv.config()
 
@@ -27,12 +31,10 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 
     if (!userExist.isVerified) {
       const date = new Date(Date.now() + 5 * 60 * 1000)
-      if (date > new Date(userExist.verifyTokenExpiry)) {
-        console.log('expired')
+      if (!userExist.verifyOtpExpiry || date > new Date(userExist.verifyOtpExpiry)) {
         try {
-          await sendEmail({
+          await sendOtpEmail({
             email: reqBody.email,
-            emailType: EMAIL_TYPE.VERIFY_EMAIL,
             userId: userExist._id,
             name: userExist.name
           })
@@ -87,9 +89,8 @@ export const signupController = async (req: Request, res: Response, next: NextFu
 
     const savedUser = await createUser({ name, password, email })
     try {
-      await sendEmail({
+      await sendOtpEmail({
         email,
-        emailType: EMAIL_TYPE.VERIFY_EMAIL,
         userId: savedUser._id,
         name
       })
@@ -98,6 +99,124 @@ export const signupController = async (req: Request, res: Response, next: NextFu
     }
 
     resSuccessHandler(res, 'Signup success.', { ...savedUser._doc, password: undefined })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const verifyEmailController = async (req: Request, res: Response, next: NextFunction) => {
+  const { otp, action, password, email } = req.query
+
+  const actionType = ['forgot-password', 'verify-email']
+
+  try {
+    if (isEmpty(email) || !isValidEmail(email as string)) {
+      throw new ClientError('Email is invalid.', 400)
+    }
+
+    if (!actionType.includes(action as string)) {
+      throw new ClientError('Action not provided.', 400)
+    }
+
+    if (action === 'forgot-password' && !isValidPassword(password as string)) {
+      throw new ClientError('Password is invalid.', 400)
+    }
+
+    if (isEmpty(otp)) {
+      throw new ClientError('OTP not provided.', 400)
+    }
+
+    const user = await getVerifyEmail(email as string)
+
+    if (!user) {
+      throw new ClientError('Invalid OTP.', 404)
+    }
+
+    if (action === 'verify-email' && !!user.isVerified) {
+      throw new ClientError('Email already verified, Please login.', 400)
+    }
+
+    const validOtp = await bcryptjs.compare(otp as string, user.verifyOtp)
+
+    if (!validOtp) {
+      throw new ClientError('OTP is invalid.', 400)
+    }
+
+    if (action === 'verify-email') {
+      user.isVerified = true
+    }
+
+    if (action === 'forgot-password') {
+      const salt = await bcryptjs.genSalt(10)
+      const hashedPassword = await bcryptjs.hash(password as string, salt)
+      user.password = hashedPassword
+    }
+
+    user.verifyOtp = undefined
+    user.verifyOtpExpiry = undefined
+    await user.save()
+
+    let data
+
+    if (action === 'verify-email') {
+      const tokenData = {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+
+      data = jwt.sign(tokenData, process.env.SECRET_TOKEN as string, {
+        expiresIn: '14h'
+      })
+    }
+
+    const message =
+      action === 'verify-email'
+        ? 'Email success verify.'
+        : 'Password success change, Please to login.'
+
+    resSuccessHandler(res, message, { data })
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+export const userDetailController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await getUserDetail(res.locals.user.id)
+
+    resSuccessHandler(res, 'Success.', user)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const sendOtpController = async (req: Request, res: Response, next: NextFunction) => {
+  const { email } = req.query
+
+  try {
+    if (isEmpty(email)) {
+      throw new ClientError('Email is required.', 400)
+    }
+
+    const user = await getUserByEmail(email as string)
+
+    if (!user) {
+      throw new ClientError('User not found.', 404)
+    }
+
+    try {
+      await sendOtpEmail({
+        email: email as string,
+        userId: user._id,
+        name: user.name
+      })
+    } catch (e) {
+      console.log(e)
+    }
+
+    resSuccessHandler(res, 'OTP sent. Please check your email.')
   } catch (error) {
     next(error)
   }

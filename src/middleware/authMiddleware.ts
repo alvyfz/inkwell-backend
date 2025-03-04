@@ -1,33 +1,30 @@
 import AuthenticationError from '../commons/exceptions/AuthenticationError'
 import { Request, Response, NextFunction } from 'express'
-import { auth } from 'firebase-admin'
+import jwt from 'jsonwebtoken'
+import { isEmpty } from 'lodash'
 
 export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const idToken = req.headers.authorization?.split('Bearer ')[1]
-
   try {
-    if (!idToken) {
-      throw new AuthenticationError('Unauthorized: No token provided')
+    const token = req.headers.authorization?.split('Bearer ')[1]
+
+    if (isEmpty(token)) {
+      throw new AuthenticationError('Unauthorized: No token provided.')
     }
 
-    const decodedToken = await auth().verifyIdToken(idToken)
+    const decodedToken = jwt.verify(token as string, process.env.SECRET_TOKEN as string)
 
-    if (!decodedToken) {
-      throw new AuthenticationError('Unauthorized: Invalid token')
+    if (isEmpty(decodedToken)) {
+      throw new AuthenticationError('Unauthorized: Invalid token.')
     }
 
     res.locals.user = decodedToken
 
     next()
   } catch (error: any) {
-    if (error.code === 'auth/id-token-expired') {
-      next(new AuthenticationError('Unauthorized: Token has expired'))
-    } else {
-      next(new AuthenticationError('Unauthorized: Invalid token'))
-    }
+    next(error)
   }
 }

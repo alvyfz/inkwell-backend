@@ -21,10 +21,8 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
-    forgotPasswordToken: String,
-    forgotPasswordTokenExpiry: Date,
-    verifyToken: String,
-    verifyTokenExpiry: Date,
+    verifyOtp: String,
+    verifyOtpExpiry: Date,
     createdAt: {
       type: Date,
       default: Date.now

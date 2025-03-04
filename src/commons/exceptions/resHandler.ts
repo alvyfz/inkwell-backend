@@ -6,7 +6,8 @@ export const resErrorHandler = (res: any, error: any) => {
     return res.status(500).json({
       status: false,
       message: 'service unavailable',
-      dev: error.message
+      dev: error.message,
+      code: 500
     })
   }
 
@@ -14,7 +15,8 @@ export const resErrorHandler = (res: any, error: any) => {
     const response = {
       isSuccess: false,
       message: error.message,
-      error: error.errors
+      error: error.errors,
+      code: error.statusCode || 400
     }
     return res.status(error.statusCode || 400).json(response)
   }
@@ -23,7 +25,8 @@ export const resErrorHandler = (res: any, error: any) => {
     const response = {
       isSuccess: false,
       message: error.response.message,
-      error: error.response.code
+      error: error.response.code,
+      code: error.response.code || 500
     }
     return res.status(error.response.code || 500).json(response)
   }
@@ -34,7 +37,8 @@ export const resErrorHandler = (res: any, error: any) => {
   const response = {
     isSuccess: false,
     message: 'Sorry, something went wrong on the server',
-    dev: error.message
+    dev: error.message,
+    code: 500
   }
   return res.status(500).json(response)
 }
@@ -43,7 +47,8 @@ export const resSuccessHandler = (res: any, message: any, payload?: any, code = 
   const response = {
     isSuccess: true,
     payload,
-    message
+    message,
+    code
   }
   return res.status(code).send(response)
 }

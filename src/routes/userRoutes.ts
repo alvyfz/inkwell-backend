@@ -6,8 +6,8 @@ import {
   userDetailController,
   verifyEmailController
 } from '@/controller/userController'
-import { keyMiddleware } from '@/middleware/keyMiddleware'
-import { authMiddleware } from '@/middleware/authMiddleware'
+import keyMiddleware from '@/middleware/keyMiddleware'
+import authMiddleware from '@/middleware/authMiddleware'
 
 const router = express.Router()
 

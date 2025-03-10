@@ -17,6 +17,9 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
+    bio: String,
+    avatar: String,
+    cover: String,
     isAdmin: {
       type: Boolean,
       default: false

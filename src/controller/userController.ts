@@ -54,9 +54,11 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 
     //  create token data
     const tokenData = {
-      id: userExist._id,
-      name: userExist.name,
-      email: userExist.email
+      ...userExist._doc,
+      password: undefined,
+      verifyOtpExpiry: undefined,
+      verifyOtp: undefined,
+      id: userExist._id
     }
 
     const token = jwt.sign(tokenData, process.env.SECRET_TOKEN as string, {
@@ -160,9 +162,11 @@ export const verifyEmailController = async (req: Request, res: Response, next: N
 
     if (action === 'verify-email') {
       const tokenData = {
-        id: user._id,
-        name: user.name,
-        email: user.email
+        ...user._doc,
+        password: undefined,
+        verifyOtpExpiry: undefined,
+        verifyOtp: undefined,
+        id: user._id
       }
 
       data = jwt.sign(tokenData, process.env.SECRET_TOKEN as string, {

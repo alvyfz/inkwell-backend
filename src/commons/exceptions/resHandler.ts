@@ -32,8 +32,8 @@ export const resErrorHandler = (res: any, error: any) => {
   }
 
   // Server ERROR!
-  console.log(error)
-  console.log(error.message)
+  console.log(error, 'error')
+  console.log(error.messag, 'error message')
   const response = {
     isSuccess: false,
     message: 'Sorry, something went wrong on the server',

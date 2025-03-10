@@ -68,7 +68,7 @@ export const sendOtpEmail = async ({
             <title>OTP Email</title>
           </head>
           <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0;">
-             <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
               <tr>
                 <td style="background-color: #000000; padding: 20px; text-align: center;">
                   <h1 style="color: #ffffff; font-size: 24px; margin: 0;">OTP Verification</h1>

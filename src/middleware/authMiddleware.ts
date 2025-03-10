@@ -3,11 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { isEmpty } from 'lodash'
 
-export const authMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const token = req.headers.authorization?.split('Bearer ')[1]
 
@@ -28,3 +24,5 @@ export const authMiddleware = async (
     next(error)
   }
 }
+
+export default authMiddleware

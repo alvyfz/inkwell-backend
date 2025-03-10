@@ -3,11 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import { isEmpty } from 'lodash'
 import { decryptAES } from '@/commons/utils/cryptoAes'
 
-export const keyMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const keyMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const apiKey = req.headers?.['api-key']
 
@@ -25,3 +21,5 @@ export const keyMiddleware = async (
     next(err)
   }
 }
+
+export default keyMiddleware

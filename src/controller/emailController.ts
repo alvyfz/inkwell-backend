@@ -110,7 +110,6 @@ export const sendOtpEmail = async ({
 
     return await mailerSend.email.send(emailParams)
   } catch (err: any) {
-    console.log(JSON.stringify(err), 'error')
     throw new Error(err.body.message)
   }
 }

@@ -16,18 +16,12 @@ const articleSchema = new Schema(
       type: String,
       required: true
     },
-    tagIds: {
-      type: [String]
-    },
     coverImage: String,
     publishedDate: Date,
     status: {
       type: String,
       enum: ['draft', 'unpublished', 'published'],
       default: 'draft'
-    },
-    likes: {
-      type: [String]
     },
     createdAt: {
       type: Date,

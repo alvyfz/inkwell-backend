@@ -5,7 +5,9 @@ import { resSuccessHandler } from '@/commons/exceptions/resHandler'
 import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
 import { createDraftArticle, getDrafArticle } from '@/repository/articleCollection'
-import { IArticle } from '@/entities/articleMode'
+import { IArticle } from '@/entities/articleEntities'
+import checkRequiredFields from '@/commons/utils/checkRequiredFields'
+import { updateArticleTopic } from '@/repository/topicCollection'
 
 dotenv.config()
 
@@ -48,24 +50,22 @@ export const getDraftController = async (req: Request, res: Response, next: Next
 }
 
 export const publishDraftController = async (req: Request, res: Response, next: NextFunction) => {
-  const {
-    title,
-    content,
-    tagIds,
-    coverImage
-  }: { title: string; content: string; tagIds: string[]; coverImage: string } = req.body
+  const reqBody = req.body
+  const { topicIds, coverImage }: { topicIds: string[]; coverImage: string } = reqBody
 
   try {
+    checkRequiredFields(reqBody, ['topicIds', 'coverImage'])
     const draftExist = await getDrafArticle(res.locals.user.id)
 
     if (!draftExist) {
       throw new ClientError('Draft not found.', 404)
     }
 
-    draftExist.published = true
-    await draftExist.save()
+    draftExist.status = 'published'
+    draftExist.coverImage = coverImage
+    await Promise.all([updateArticleTopic(topicIds, draftExist._id), draftExist.save()])
 
-    resSuccessHandler(res, 'Draft published.', draftExist)
+    resSuccessHandler(res, 'Story published.', draftExist)
   } catch (error) {
     next(error)
   }

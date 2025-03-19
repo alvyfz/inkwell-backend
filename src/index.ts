@@ -2,9 +2,10 @@
 
 import { resErrorHandler } from './commons/exceptions/resHandler'
 import { Response } from 'express'
-import usersRouter from './routes/userRoutes'
-import filesRouter from './routes/fileRoutes'
-import articlesRouter from './routes/articleRoutes'
+import usersRoutes from './routes/userRoutes'
+import filesRoutes from './routes/fileRoutes'
+import articlesRoutes from './routes/articleRoutes'
+import topicsRoutes from './routes/topicRoutes'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import express from 'express'
@@ -29,9 +30,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(cors(corsOptions))
 
-app.use('/users', usersRouter)
-app.use('/files', filesRouter)
-app.use('/articles', articlesRouter)
+app.use('/users', usersRoutes)
+app.use('/files', filesRoutes)
+app.use('/articles', articlesRoutes)
+app.use('/topics', topicsRoutes)
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error

@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
 
-const tagSchema = new Schema(
+const topicSchema = new Schema(
   {
     name: {
       type: String,
@@ -10,8 +10,8 @@ const tagSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ['tag', 'subtag'],
-      default: 'tag'
+      enum: ['topic', 'subtopic'],
+      default: 'topic'
     },
     parentId: {
       type: String
@@ -24,6 +24,6 @@ const tagSchema = new Schema(
   { timestamps: true }
 )
 
-const Tag = mongoose.models.tags || mongoose.model('tags', tagSchema)
+const Topic = mongoose.models.topics || mongoose.model('topics', topicSchema)
 
-export default Tag
+export default Topic

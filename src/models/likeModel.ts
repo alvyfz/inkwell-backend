@@ -2,9 +2,9 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
 
-const followSchema = new Schema(
+const likeSchema = new Schema(
   {
-    followeeId: {
+    likeeId: {
       type: String,
       required: true
     },
@@ -14,8 +14,8 @@ const followSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ['user', 'topic'],
-      default: 'user'
+      enum: ['user', 'topic', 'article'],
+      default: 'article'
     },
     createdAt: {
       type: Date,
@@ -25,6 +25,6 @@ const followSchema = new Schema(
   { timestamps: true }
 )
 
-const Follow = mongoose.models.follows || mongoose.model('follows', followSchema)
+const Like = mongoose.models.likes || mongoose.model('likes', likeSchema)
 
-export default Follow
+export default Like

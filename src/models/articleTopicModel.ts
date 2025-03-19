@@ -2,13 +2,13 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
 
-const articleTagSchema = new Schema(
+const articleTopicSchema = new Schema(
   {
     articleId: {
       type: String,
       required: true
     },
-    tagId: {
+    topicId: {
       type: String,
       required: true
     },
@@ -20,6 +20,7 @@ const articleTagSchema = new Schema(
   { timestamps: true }
 )
 
-const ArticleTag = mongoose.models.articleTags || mongoose.model('articleTags', articleTagSchema)
+const ArticleTopic =
+  mongoose.models.articleTopics || mongoose.model('articleTopics', articleTopicSchema)
 
-export default ArticleTag
+export default ArticleTopic

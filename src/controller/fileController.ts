@@ -13,7 +13,6 @@ interface MulterRequest extends Request {
 export const uploadFileController = async (req: Request, res: Response, next: NextFunction) => {
   const file = (req as MulterRequest).file
 
-  console.log(file)
   try {
     if (isEmpty(file)) {
       throw new ClientError('No files reveived.', 400)

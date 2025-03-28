@@ -4,15 +4,15 @@ import {
   getUserByEmail,
   getUserDetail,
   getVerifyEmail
-} from '@/repository/userCollection'
-import ClientError from '@/commons/exceptions/ClientError'
+} from '../repository/userCollection'
+import ClientError from '../commons/exceptions/ClientError'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { resSuccessHandler } from '@/commons/exceptions/resHandler'
+import { resSuccessHandler } from '../commons/exceptions/resHandler'
 import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
-import { isValidEmail, isValidPassword } from '@/commons/utils/util'
-import { sendOtpEmail } from '@/controller/emailController'
+import { isValidEmail, isValidPassword } from '../commons/utils/util'
+import { sendOtpEmail } from '../controller/emailController'
 
 dotenv.config()
 

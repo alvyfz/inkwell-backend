@@ -1,4 +1,4 @@
-import { storage } from '@/config/appwrite'
+import { storage } from '../config/appwrite'
 import { ID } from 'node-appwrite'
 
 export const uploadFile = async (file: File) => {

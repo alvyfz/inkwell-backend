@@ -1,8 +1,8 @@
 import bcryptjs from 'bcryptjs'
-import User from '@/models/userModel'
+import User from '../models/userModel'
 import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend'
 import * as dotenv from 'dotenv'
-import { connect } from '@/config/mongo'
+import { connect } from '../config/mongo'
 
 dotenv.config()
 
@@ -49,7 +49,7 @@ export const sendOtpEmail = async ({
     })
 
     const sentFrom = new Sender(
-      `inkwell-no-reply@${process.env.MAILER_DOMAIN}`,
+      `inkwell-no-reply..${process.env.MAILER_DOMAIN}`,
       process.env.PRODUCT_NAME as string
     )
 

@@ -1,7 +1,7 @@
 import express from 'express'
 
-import keyMiddleware from '@/middleware/keyMiddleware'
-import { createTopicController, getListTopicController } from '@/controller/topicController'
+import keyMiddleware from '../middleware/keyMiddleware'
+import { createTopicController, getListTopicController } from '../controller/topicController'
 
 const router = express.Router()
 

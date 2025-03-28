@@ -1,9 +1,9 @@
-import ClientError from '@/commons/exceptions/ClientError'
-import { resSuccessHandler } from '@/commons/exceptions/resHandler'
-import checkRequiredFields from '@/commons/utils/checkRequiredFields'
-import { IGetListParams } from '@/commons/utils/types'
-import { ITopic } from '@/entities/topicEntities'
-import { createTopic, getListTopic } from '@/repository/topicCollection'
+import ClientError from '../commons/exceptions/ClientError'
+import { resSuccessHandler } from '../commons/exceptions/resHandler'
+import checkRequiredFields from '../commons/utils/checkRequiredFields'
+import { IGetListParams } from '../commons/utils/types'
+import { ITopic } from '../entities/topicEntities'
+import { createTopic, getListTopic } from '../repository/topicCollection'
 import { NextFunction, Request, Response } from 'express'
 
 export const createTopicController = async (req: Request, res: Response, next: NextFunction) => {

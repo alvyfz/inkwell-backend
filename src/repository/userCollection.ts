@@ -1,8 +1,8 @@
 import bcryptjs from 'bcryptjs'
 
-import User from '@/models/userModel'
+import User from '../models/userModel'
 import * as dotenv from 'dotenv'
-import { connect } from '@/config/mongo'
+import { connect } from '../config/mongo'
 
 dotenv.config()
 

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
-import { connect } from '@/config/mongo'
-import Article from '@/models/articleModel'
+import { connect } from '../config/mongo'
+import Article from '../models/articleModel'
 
 dotenv.config()
 

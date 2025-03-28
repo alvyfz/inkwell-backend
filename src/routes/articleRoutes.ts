@@ -1,12 +1,12 @@
 import express from 'express'
 
-import keyMiddleware from '@/middleware/keyMiddleware'
-import authMiddleware from '@/middleware/authMiddleware'
+import keyMiddleware from '../middleware/keyMiddleware'
+import authMiddleware from '../middleware/authMiddleware'
 import {
   draftUpdateController,
   getDraftController,
   publishDraftController
-} from '@/controller/articleController'
+} from '../controller/articleController'
 
 const router = express.Router()
 

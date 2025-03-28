@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import ClientError from '@/commons/exceptions/ClientError'
-import { resSuccessHandler } from '@/commons/exceptions/resHandler'
+import ClientError from '../commons/exceptions/ClientError'
+import { resSuccessHandler } from '../commons/exceptions/resHandler'
 import { isEmpty } from 'lodash'
-import { getFile, uploadFile } from '@/repository/fileCollection'
+import { getFile, uploadFile } from '../repository/fileCollection'
 const fs = require('fs/promises')
 const { InputFile } = require('node-appwrite/file')
 

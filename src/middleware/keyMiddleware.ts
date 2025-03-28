@@ -1,7 +1,7 @@
 import AuthenticationError from '../commons/exceptions/AuthenticationError'
 import { Request, Response, NextFunction } from 'express'
 import { isEmpty } from 'lodash'
-import { decryptAES } from '@/commons/utils/cryptoAes'
+import { decryptAES } from '../commons/utils/cryptoAes'
 
 const keyMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

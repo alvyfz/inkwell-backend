@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
 
-import ClientError from '@/commons/exceptions/ClientError'
-import { resSuccessHandler } from '@/commons/exceptions/resHandler'
+import ClientError from '../commons/exceptions/ClientError'
+import { resSuccessHandler } from '../commons/exceptions/resHandler'
 import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
-import { createDraftArticle, getDrafArticle } from '@/repository/articleCollection'
-import { IArticle } from '@/entities/articleEntities'
-import checkRequiredFields from '@/commons/utils/checkRequiredFields'
-import { updateArticleTopic } from '@/repository/topicCollection'
+import { createDraftArticle, getDrafArticle } from '../repository/articleCollection'
+import { IArticle } from '../entities/articleEntities'
+import checkRequiredFields from '../commons/utils/checkRequiredFields'
+import { updateArticleTopic } from '../repository/topicCollection'
 
 dotenv.config()
 

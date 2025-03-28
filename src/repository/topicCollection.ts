@@ -1,10 +1,10 @@
 import { isEmpty } from 'lodash'
 import { ITopic } from './../entities/topicEntities'
 
-import { connect } from '@/config/mongo'
-import Topic from '@/models/topicModel'
-import { IGetListParams } from '@/commons/utils/types'
-import ArticleTopic from '@/models/articleTopicModel'
+import { connect } from '../config/mongo'
+import Topic from '../models/topicModel'
+import { IGetListParams } from '../commons/utils/types'
+import ArticleTopic from '../models/articleTopicModel'
 
 connect()
 

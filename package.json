@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon -r tsconfig-paths/register src/index.ts",
+    "dev": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/**/*.ts",
-    "format": "eslint src/**/*.ts --fix"
+    "lint": "eslint ./**/*.ts",
+    "format": "eslint ./**/*.ts --fix"
   },
   "keywords": [],
   "author": "",

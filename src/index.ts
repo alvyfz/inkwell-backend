@@ -1,4 +1,3 @@
-'use strict'
 
 import { resErrorHandler } from './commons/exceptions/resHandler'
 import { Response } from 'express'

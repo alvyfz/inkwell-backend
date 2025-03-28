@@ -5,7 +5,7 @@ import authMiddleware from '../middleware/authMiddleware'
 import { getFileController, uploadFileController } from '../controller/fileController'
 
 const multer = require('multer')
-const upload = multer({ dest: './tmp/' })
+const upload = multer({ storage: multer.memoryStorage() })
 
 const router = express.Router()
 

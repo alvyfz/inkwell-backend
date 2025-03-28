@@ -17,15 +17,9 @@ export const uploadFileController = async (req: Request, res: Response, next: Ne
     if (isEmpty(file)) {
       throw new ClientError('No files reveived.', 400)
     }
-    const fileInput = InputFile.fromPath(file.path, file.originalname)
+    const fileInput = InputFile.fromBuffer(file.buffer, file.originalname)
 
     const upload = await uploadFile(fileInput)
-
-    try {
-      await fs.unlink(file.path)
-    } catch (e) {
-      console.log(e)
-    }
 
     resSuccessHandler(res, 'Successfully uploaded file.', upload.$id)
   } catch (error) {

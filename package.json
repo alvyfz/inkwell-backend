@@ -1,14 +1,14 @@
 {
   "name": "backend-repo",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "node dist/index.js",
-    "dev": "nodemon -r tsconfig-paths/register ./index.ts",
+    "dev": "nodemon -r tsconfig-paths/register src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ./**/*.ts",
-    "format": "eslint ./**/*.ts --fix"
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix"
   },
   "keywords": [],
   "author": "",

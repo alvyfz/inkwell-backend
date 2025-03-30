@@ -49,7 +49,7 @@ export const sendOtpEmail = async ({
     })
 
     const sentFrom = new Sender(
-      `inkwell-no-reply..${process.env.MAILER_DOMAIN}`,
+      `inkwell-no-reply.${process.env.MAILER_DOMAIN}`,
       process.env.PRODUCT_NAME as string
     )
 
@@ -92,7 +92,7 @@ export const sendOtpEmail = async ({
                     Thank you,
                   </p>
                   <p style="font-size: 16px; color: #333333; margin: 0;">
-                    The Inkwell Team
+                    The Inkwells Team
                   </p>
                 </td>
               </tr>

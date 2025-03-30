@@ -49,7 +49,7 @@ export const sendOtpEmail = async ({
     })
 
     const sentFrom = new Sender(
-      `inkwell-no-reply.${process.env.MAILER_DOMAIN}`,
+      `inkwell-no-reply@${process.env.MAILER_DOMAIN}`,
       process.env.PRODUCT_NAME as string
     )
 

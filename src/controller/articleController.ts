@@ -12,19 +12,18 @@ import { updateArticleTopic } from '../repository/topicCollection'
 dotenv.config()
 
 export const draftUpdateController = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, content }: { title: string; content: string } = req.body
+  const { content }: { title: string; content: string } = req.body
   try {
-    if (isEmpty(title) || isEmpty(title)) {
-      throw new ClientError('title or content cannot empty.', 400)
+    if (isEmpty(content)) {
+      throw new ClientError('title cannot empty.', 400)
     }
 
     const draftExist = await getDrafArticle(res.locals.user.id)
 
     if (!draftExist) {
-      const draftNew = await createDraftArticle(res.locals.user.id, title, content)
+      const draftNew = await createDraftArticle(res.locals.user.id, content)
       resSuccessHandler(res, 'Draft created.', draftNew)
     } else {
-      draftExist.title = title
       draftExist.content = content
 
       await draftExist.save()
@@ -51,18 +50,36 @@ export const getDraftController = async (req: Request, res: Response, next: Next
 
 export const publishDraftController = async (req: Request, res: Response, next: NextFunction) => {
   const reqBody = req.body
-  const { topicIds, coverImage }: { topicIds: string[]; coverImage: string } = reqBody
+  const {
+    topicIds,
+    coverImage,
+    title,
+    description,
+    status
+  }: {
+    topicIds: string[]
+    coverImage: string
+    title: string
+    description: string
+    status: 'published' | 'unpublished'
+  } = reqBody
 
   try {
-    checkRequiredFields(reqBody, ['topicIds', 'coverImage'])
+    checkRequiredFields(reqBody, ['topicIds', 'coverImage', 'title', 'description', 'status'])
+
+    if (!['published', 'unpublished'].includes(status)) {
+      throw new ClientError('Invalid status.', 400)
+    }
     const draftExist = await getDrafArticle(res.locals.user.id)
 
     if (!draftExist) {
       throw new ClientError('Draft not found.', 404)
     }
 
-    draftExist.status = 'published'
+    draftExist.status = status
     draftExist.coverImage = coverImage
+    draftExist.title = title
+    draftExist.description = description
     await Promise.all([updateArticleTopic(topicIds, draftExist._id), draftExist.save()])
 
     resSuccessHandler(res, 'Story published.', draftExist)

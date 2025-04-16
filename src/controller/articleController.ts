@@ -4,7 +4,11 @@ import ClientError from '../commons/exceptions/ClientError'
 import { resSuccessHandler } from '../commons/exceptions/resHandler'
 import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
-import { createDraftArticle, getDrafArticle } from '../repository/articleCollection'
+import {
+  createDraftArticle,
+  getDraftArticle,
+  getListMyArticle
+} from '../repository/articleCollection'
 import { IArticle } from '../entities/articleEntities'
 import checkRequiredFields from '../commons/utils/checkRequiredFields'
 import { updateArticleTopic } from '../repository/topicCollection'
@@ -18,13 +22,14 @@ export const draftUpdateController = async (req: Request, res: Response, next: N
       throw new ClientError('title cannot empty.', 400)
     }
 
-    const draftExist = await getDrafArticle(res.locals.user.id)
+    const draftExist = await getDraftArticle(res.locals.user.id)
 
     if (!draftExist) {
       const draftNew = await createDraftArticle(res.locals.user.id, content)
       resSuccessHandler(res, 'Draft created.', draftNew)
     } else {
       draftExist.content = content
+      draftExist.updatedAt = new Date()
 
       await draftExist.save()
       resSuccessHandler(res, 'Draft updated.', draftExist as IArticle)
@@ -36,7 +41,7 @@ export const draftUpdateController = async (req: Request, res: Response, next: N
 
 export const getDraftController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const draftExist = await getDrafArticle(res.locals.user.id)
+    const draftExist = await getDraftArticle(res.locals.user.id)
 
     if (!draftExist) {
       throw new ClientError('Draft not found.', 404)
@@ -70,7 +75,7 @@ export const publishDraftController = async (req: Request, res: Response, next: 
     if (!['published', 'unpublished'].includes(status)) {
       throw new ClientError('Invalid status.', 400)
     }
-    const draftExist = await getDrafArticle(res.locals.user.id)
+    const draftExist = await getDraftArticle(res.locals.user.id)
 
     if (!draftExist) {
       throw new ClientError('Draft not found.', 404)
@@ -83,6 +88,31 @@ export const publishDraftController = async (req: Request, res: Response, next: 
     await Promise.all([updateArticleTopic(topicIds, draftExist._id), draftExist.save()])
 
     resSuccessHandler(res, 'Story published.', draftExist)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getListMyArticleController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req
+  try {
+    const { status } = req.query
+
+    if (!['published', 'unpublished'].includes(status as string)) {
+      throw new ClientError('Invalid status.', 400)
+    }
+
+    const draftList = await getListMyArticle(res.locals.user.id, status as string)
+
+    if (!draftList.length) {
+      throw new ClientError('Draft not found.', 404)
+    }
+
+    resSuccessHandler(res, 'Success', draftList)
   } catch (error) {
     next(error)
   }

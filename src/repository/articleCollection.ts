@@ -18,3 +18,12 @@ export const getListMyArticle = async (userId: string, status: string) =>
     .select('-__v')
     .populate('authorId', 'name avatar')
     .lean()
+
+export const deleteArticle = async (userId: string, articleId: string) =>
+  Article.deleteOne({ _id: articleId, authorId: userId })
+
+export const getArticleById = async (articleId: string) =>
+  Article.findById(articleId).select('-__v')
+
+export const getMyArticleById = async (userId: string, articleId: string) =>
+  Article.findOne({ _id: articleId, authorId: userId }).select('-__v')

@@ -6,8 +6,10 @@ import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
 import {
   createDraftArticle,
+  deleteArticle,
   getDraftArticle,
-  getListMyArticle
+  getListMyArticle,
+  getMyArticleById
 } from '../repository/articleCollection'
 import { IArticle } from '../entities/articleEntities'
 import checkRequiredFields from '../commons/utils/checkRequiredFields'
@@ -113,6 +115,56 @@ export const getListMyArticleController = async (
     }
 
     resSuccessHandler(res, 'Success', draftList)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const deleteMyArticleByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req
+  try {
+    const { id } = req.params
+
+    checkRequiredFields({ id }, ['id'])
+
+    const deleteMyArticle = await deleteArticle(res.locals.user.id, id)
+
+    resSuccessHandler(res, 'Success delete article.', deleteMyArticle)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const unpublishArticleByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req
+  try {
+    const { id } = req.params
+
+    checkRequiredFields({ id }, ['id'])
+
+    const myArticle = await getMyArticleById(res.locals.user.id, id)
+
+    if (!myArticle) {
+      throw new ClientError('Article not found.', 404)
+    }
+
+    if (myArticle.status === 'unpublished' || myArticle.status === 'draft') {
+      throw new ClientError('Article already unpublished.', 400)
+    }
+
+    myArticle.status = 'unpublished'
+    myArticle.updatedAt = new Date()
+    await myArticle.save()
+
+    resSuccessHandler(res, 'Success unpublished article.')
   } catch (error) {
     next(error)
   }

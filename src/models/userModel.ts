@@ -17,6 +17,11 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true
+    },
     bio: String,
     avatar: String,
     cover: String,

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import {
   createUser,
   getUserByEmail,
+  getUserByUsername,
   getUserDetail,
   getVerifyEmail
 } from '../repository/userCollection'
@@ -11,7 +12,7 @@ import jwt from 'jsonwebtoken'
 import { resSuccessHandler } from '../commons/exceptions/resHandler'
 import * as dotenv from 'dotenv'
 import { isEmpty } from 'lodash'
-import { isValidEmail, isValidPassword } from '../commons/utils/util'
+import { isValidEmail, isValidPassword, isValidUsername } from '../commons/utils/util'
 import { sendOtpEmail } from '../controller/emailController'
 
 dotenv.config()
@@ -72,15 +73,21 @@ export const loginController = async (req: Request, res: Response, next: NextFun
 }
 
 export const signupController = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, name, password }: { email: string; password: string; name: string } = req.body
+  const {
+    email,
+    name,
+    password,
+    username
+  }: { email: string; password: string; name: string; username: string } = req.body
 
   try {
     if (
       (isEmpty(email) && !isValidEmail(email)) ||
       (isEmpty(password) && !isValidPassword(password)) ||
-      isEmpty(name)
+      isEmpty(name) ||
+      (isEmpty(username) && !isValidUsername(username))
     ) {
-      throw new ClientError('name, email or password is invalid', 400)
+      throw new ClientError('name, email, isValidUsername or password is invalid', 400)
     }
     // check if user already exist
     const userExist = await getUserByEmail(email)
@@ -89,7 +96,7 @@ export const signupController = async (req: Request, res: Response, next: NextFu
       throw new ClientError('User already exists, please use another email.')
     }
 
-    const savedUser = await createUser({ name, password, email })
+    const savedUser = await createUser({ name, password, email, username })
     try {
       await sendOtpEmail({
         email,
@@ -221,6 +228,30 @@ export const sendOtpController = async (req: Request, res: Response, next: NextF
     }
 
     resSuccessHandler(res, 'OTP sent. Please check your email.')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const usernameValidationController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { username } = req.query
+
+  try {
+    if (isEmpty(username)) {
+      throw new ClientError('username is required.', 400)
+    }
+
+    const user = await getUserByUsername(username as string)
+
+    if (!!user) {
+      throw new ClientError('Username already exists.', 400)
+    }
+
+    resSuccessHandler(res, 'Success.')
   } catch (error) {
     next(error)
   }

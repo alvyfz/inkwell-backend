@@ -4,6 +4,7 @@ import {
   sendOtpController,
   signupController,
   userDetailController,
+  usernameValidationController,
   verifyEmailController
 } from '../controller/userController'
 import keyMiddleware from '../middleware/keyMiddleware'
@@ -16,5 +17,6 @@ router.post('/signup', keyMiddleware, signupController)
 router.get('/verify-email', keyMiddleware, verifyEmailController)
 router.get('/me', keyMiddleware, authMiddleware, userDetailController)
 router.get('/send-otp', keyMiddleware, sendOtpController)
+router.get('/username-validation', keyMiddleware, usernameValidationController)
 
 export default router

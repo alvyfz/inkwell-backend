@@ -25,6 +25,10 @@ const articleSchema = new Schema(
       enum: ['draft', 'unpublished', 'published'],
       default: 'draft'
     },
+    like: {
+      type: Number,
+      default: 0
+    },
     createdAt: {
       type: Date,
       default: Date.now

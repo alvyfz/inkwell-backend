@@ -15,10 +15,6 @@ export const uploadFileController = async (req: Request, res: Response, next: Ne
 
   try {
     if (isEmpty(file)) {
-      console.error('File is empty or not attached. Request details:', {
-        headers: req.headers,
-        body: req.body
-      })
       throw new ClientError('No files received.', 400)
     }
     const fileInput = InputFile.fromBuffer(file.buffer, file.originalname)

@@ -7,7 +7,7 @@ export async function connect() {
   console.log(process.env.MONGO_URI, 'mongo url')
   try {
     await mongoose.connect(process.env.MONGO_URI as string, {
-      dbName: process.env.ENV
+      dbName: process.env.MONGO_SCHEMA
     })
     const connection = mongoose.connection
     connection.on('connected', () => {

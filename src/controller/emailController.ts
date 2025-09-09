@@ -1,9 +1,8 @@
 import bcryptjs from 'bcryptjs'
 import User from '../models/userModel'
-import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend'
 import * as dotenv from 'dotenv'
 import { connect } from '../config/mongo'
-
+const nodemailer = require('nodemailer')
 dotenv.config()
 
 connect()
@@ -30,6 +29,16 @@ export const sendOtpEmail = async ({
       throw new Error('Name is required')
     }
 
+    const transporter = nodemailer.createTransport({
+      host: process.env.MAIL_SMTP,
+      port: process.env.MAIL_PORT,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.MAIL_LOGIN,
+        pass: process.env.MAIL_KEY
+      }
+    })
+
     const otp = Math.floor(100000 + Math.random() * 900000)
 
     // create a hased token
@@ -44,22 +53,7 @@ export const sendOtpEmail = async ({
       { new: true, runValidators: true }
     )
 
-    const mailerSend = new MailerSend({
-      apiKey: process.env.MAILER_API_KEY as string
-    })
-
-    const sentFrom = new Sender(
-      `inkwell-no-reply@${process.env.MAILER_DOMAIN}`,
-      process.env.PRODUCT_NAME as string
-    )
-
-    const recipients = [new Recipient(email, name)]
-
-    const emailParams = new EmailParams()
-      .setFrom(sentFrom)
-      .setTo(recipients)
-      .setReplyTo(sentFrom)
-      .setSubject('Verify your email').setHtml(`
+    const html = `
       <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -106,10 +100,18 @@ export const sendOtpEmail = async ({
             </table>
           </body>
           </html>
-      `)
+      `
 
-    return await mailerSend.email.send(emailParams)
+    const mail = {
+      from: `"Inkwells" <inkwell.fauzi@gmail.com>`,
+      to: email,
+      subject: 'Verify your email',
+      html: html
+    }
+
+    return await await transporter.sendMail(mail)
   } catch (err: any) {
+    console.log(err)
     throw new Error(err.body.message)
   }
 }

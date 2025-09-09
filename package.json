@@ -16,6 +16,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/express-session": "^1.18.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-github2": "^1.2.9",
+    "@types/passport-google-oauth20": "^2.0.16",
     "appwrite": "^17.0.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
@@ -23,6 +27,7 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-session": "^1.18.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
@@ -31,6 +36,9 @@
     "multer": "^1.4.5-lts.1",
     "node": "^18.20.7",
     "node-appwrite": "^15.0.0",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0",
     "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {

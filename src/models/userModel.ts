@@ -8,14 +8,10 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    password: {
-      type: String,
-      required: true
-    },
     name: String,
     isVerified: {
       type: Boolean,
-      default: false
+      default: true
     },
     username: {
       type: String,
@@ -29,8 +25,6 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
-    verifyOtp: String,
-    verifyOtpExpiry: Date,
     createdAt: {
       type: Date,
       default: Date.now
@@ -38,7 +32,22 @@ const userSchema = new Schema(
     updatedAt: {
       type: Date,
       default: Date.now
-    }
+    },
+    authType: {
+      type: String,
+      enum: ['oauth'],
+      default: 'oauth'
+    },
+    oauthProviders: [{
+      provider: {
+        type: String,
+        enum: ['github', 'google']
+      },
+      providerId: String,
+      email: String,
+      accessToken: String,
+      refreshToken: String
+    }]
   },
   { timestamps: true }
 )

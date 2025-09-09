@@ -1,5 +1,3 @@
-import bcryptjs from 'bcryptjs'
-
 import User from '../models/userModel'
 import * as dotenv from 'dotenv'
 import { connect } from '../config/mongo'
@@ -10,26 +8,25 @@ connect()
 
 export const getUserByEmail = async (email: string) => User.findOne({ email: email })
 
+// OAuth-only user creation
 export const createUser = async (user: {
   name: string
-  password: string
   email: string
   username: string
+  authType?: string
+  oauthProviders?: any[]
 }) => {
-  const salt = await bcryptjs.genSalt(10)
-  const hashedPassword = await bcryptjs.hash(user.password, salt)
   return new User({
     name: user.name,
-    password: hashedPassword,
     email: user.email,
-    username: user.username
+    username: user.username,
+    authType: user.authType || 'oauth',
+    oauthProviders: user.oauthProviders || [],
+    isVerified: true
   }).save()
 }
 
-export const getVerifyEmail = async (email: string) =>
-  User.findOne({ email: email, verifyOtpExpiry: { $gt: Date.now() } })
-
 export const getUserDetail = async (userId: string) =>
-  User.findOne({ _id: userId }).select('-password -verifyOtp -verifyOtpExpiry -__v')
+  User.findOne({ _id: userId }).select('-__v')
 
 export const getUserByUsername = async (username: string) => User.findOne({ username: username })

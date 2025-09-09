@@ -4,12 +4,19 @@ import usersRoutes from './routes/userRoutes'
 import filesRoutes from './routes/fileRoutes'
 import articlesRoutes from './routes/articleRoutes'
 import topicsRoutes from './routes/topicRoutes'
+import oauthRoutes from './routes/oauthRoutes'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import express from 'express'
+import passport from './config/passport'
+import session from 'express-session'
+import { connect } from './config/mongo'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
+
+// Connect to MongoDB
+connect()
 
 const app = express()
 
@@ -26,11 +33,27 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(cors(corsOptions))
 
+// Session configuration for passport
+app.use(session({
+  secret: process.env.SECRET_TOKEN || 'fallback-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}))
+
+// Initialize passport
+app.use(passport.initialize())
+app.use(passport.session())
+
 // API routes dengan prefix /api untuk Vercel
 app.use('/api/users', usersRoutes)
 app.use('/api/files', filesRoutes)
 app.use('/api/articles', articlesRoutes)
 app.use('/api/topics', topicsRoutes)
+app.use('/api/auth', oauthRoutes)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -35,7 +35,7 @@ app.get('/api/health', (req, res) => {
 
 // Root endpoint
 app.get('/', (req, res) => {
-  res.json({ message: 'Inkwell API is running on Vercel!' })
+  res.json({ message: 'Inkwell API!' })
 })
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

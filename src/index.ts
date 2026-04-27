@@ -1,15 +1,12 @@
-import { resErrorHandler } from './commons/exceptions/resHandler'
-import { Response } from 'express'
-import usersRoutes from './routes/userRoutes'
-import filesRoutes from './routes/fileRoutes'
-import articlesRoutes from './routes/articleRoutes'
-import topicsRoutes from './routes/topicRoutes'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import * as dotenv from 'dotenv'
-
 dotenv.config()
+import errorHandler from './middleware/errorHandler'
+import authRoutes from './routes/authRoutes'
+import todoRoutes from './routes/todoRoutes' // Import todoRoutes
+import storageRoutes from './routes/storageRoutes' // Import storageRoutes
 
 const app = express()
 
@@ -21,28 +18,25 @@ const corsOptions = {
 }
 
 app.use(bodyParser.json())
-
 app.use(bodyParser.urlencoded({ extended: false }))
-
 app.use(cors(corsOptions))
-
-// API routes dengan prefix /api untuk Vercel
-app.use('/api/users', usersRoutes)
-app.use('/api/files', filesRoutes)
-app.use('/api/articles', articlesRoutes)
-app.use('/api/topics', topicsRoutes)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' })
 })
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-app.use(function (error: any, req: Request, res: Response, next: NextFunction) {
-  return resErrorHandler(res, error)
-})
+// Use auth routes
+app.use('/api/auth', authRoutes)
+// Use todo routes
+app.use('/api/todos', todoRoutes)
+// Use storage routes
+app.use('/api/storage', storageRoutes)
 
+// Global error handler
+app.use((error: any, req: Request, res: Response, next: NextFunction): void => {
+  errorHandler(error, req, res, next)
+})
 // For local development
 if (process.env.NODE_ENV !== 'production') {
   app.listen(port, () => {

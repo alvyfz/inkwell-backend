@@ -1,11 +1,18 @@
-const sdk = require('node-appwrite')
-import * as dotenv from 'dotenv'
+import { Client } from 'appwrite'
 
-dotenv.config()
+const client = new Client()
 
-export const client = new sdk.Client()
-  .setEndpoint(process.env.APPWRITE_ENDPOINT || '')
-  .setProject(process.env.APPWRITE_PROJECT || '')
-  .setKey(process.env.APPWRITE_KEY || '')
+const bucketId = process.env.APPWRITE_BUCKET_ID as string
+const projectId = process.env.APPWRITE_PROJECT_ID as string
 
-export const storage = new sdk.Storage(client)
+client
+  .setEndpoint(process.env.APPWRITE_ENDPOINT as string) // Your API Endpoint
+  .setProject(process.env.APPWRITE_PROJECT_ID as string) // Your Project ID
+
+export const appwrite = client
+
+export const getFileUrl = (fileId: string) => {
+  return process.env.APPWRITE_FILE_URL?.replace('BUCKET_ID', bucketId)
+    .replace('FILE_ID', fileId)
+    .replace('PROJECT_ID', projectId)
+}
